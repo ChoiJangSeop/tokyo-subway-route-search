@@ -23,12 +23,13 @@ public class RouteUnitServiceImpl implements RouteUnitService {
     @Override
     public RouteUnit create(RouteUnitCreateDto dto) {
         RouteUnitEntity routeUnitEntity = RouteUnitEntity.of(dto);
-        routeUnitRepository.save(routeUnitEntity);
 
         RouteEntity routeEntity = routeRepository.findById(dto.routeId())
                 .orElseThrow(() -> new DataNotFoundException(dto.routeId()));
 
         routeUnitEntity.setRoute(routeEntity);
+
+        routeUnitRepository.save(routeUnitEntity);
 
         return RouteUnit.of(routeUnitEntity);
     }

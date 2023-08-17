@@ -16,7 +16,10 @@ public record Link(Long id, String prevStation, String nextStation, String lineN
     public Double getData(RouteType routeType) {
         if (routeType == RouteType.SHORT_DISTANCE) {
             return this.distance();
+        } else if (routeType== RouteType.MINIMUM_STATION) {
+            return 1.0D;
         } else {
+            // default type
             return (double) this.duration();
         }
     }

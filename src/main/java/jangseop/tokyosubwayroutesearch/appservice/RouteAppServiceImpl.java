@@ -160,7 +160,7 @@ public class RouteAppServiceImpl implements RouteAppService {
                             routeUnit.distance(), routeUnit.duration(),  newRoute.id()));
         });
 
-        return newRoute;
+        return routeService.findRoute(src, dest, routeType);
     }
 
     // List<Link> to List<RouteUnit>
