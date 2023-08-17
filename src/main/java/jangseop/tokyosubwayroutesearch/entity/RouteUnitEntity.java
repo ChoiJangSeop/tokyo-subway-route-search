@@ -1,7 +1,6 @@
 package jangseop.tokyosubwayroutesearch.entity;
 
 import jakarta.persistence.*;
-import jangseop.tokyosubwayroutesearch.domain.RouteUnit;
 import jangseop.tokyosubwayroutesearch.service.dto.RouteUnitCreateDto;
 import lombok.Getter;
 
@@ -10,11 +9,11 @@ import lombok.Getter;
 @Table(name = "ROUTE_UNIT")
 public class RouteUnitEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROUTE_UNIT_ID")
     private Long id;
 
-    private int order;
+    private int number;
 
     private String src;
 
@@ -36,17 +35,23 @@ public class RouteUnitEntity {
     public static RouteUnitEntity of(RouteUnitCreateDto dto) {
         RouteUnitEntity routeUnitEntity = new RouteUnitEntity();
 
-        routeUnitEntity.order = dto.order();
+        routeUnitEntity.number = dto.order();
         routeUnitEntity.src = dto.src();
         routeUnitEntity.dest = dto.dest();
         routeUnitEntity.lineNumber = dto.lineNumber();
         routeUnitEntity.distance = dto.distance();
         routeUnitEntity.duration = dto.duration();
 
-        routeUnitEntity.route = dto.route();
-        dto.route().addRouteUnit(routeUnitEntity);
-
         return routeUnitEntity;
+    }
+
+    public void setRoute(RouteEntity route) {
+        if (this.route != null) {
+            this.route.getRoutes().remove(this);
+        }
+
+        this.route = route;
+        route.getRoutes().add(this);
     }
 
 }

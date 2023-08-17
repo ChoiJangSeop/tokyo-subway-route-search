@@ -3,13 +3,11 @@ package jangseop.tokyosubwayroutesearch.service;
 
 import jangseop.tokyosubwayroutesearch.domain.Route;
 import jangseop.tokyosubwayroutesearch.domain.RouteType;
-import jangseop.tokyosubwayroutesearch.domain.RouteUnit;
 import jangseop.tokyosubwayroutesearch.entity.RouteEntity;
 import jangseop.tokyosubwayroutesearch.entity.RouteUnitEntity;
 import jangseop.tokyosubwayroutesearch.exception.RouteNotFoundException;
 import jangseop.tokyosubwayroutesearch.repository.RouteRepository;
 import jangseop.tokyosubwayroutesearch.repository.RouteUnitRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.util.Lists.emptyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,7 +51,7 @@ public class RouteServiceTest {
         double distance = 0.0;
         int duration = 0;
 
-        when(routeUnitEntity.getOrder()).thenReturn(testOrder);
+        when(routeUnitEntity.getNumber()).thenReturn(testOrder);
         when(routeUnitEntity.getSrc()).thenReturn(testUnitSrc);
         when(routeUnitEntity.getDest()).thenReturn(testUnitDest);
         when(routeUnitEntity.getLineNumber()).thenReturn(testUnitLineNumber);
@@ -100,5 +97,7 @@ public class RouteServiceTest {
         assertThatThrownBy(() -> routeService.findRoute(testSrc, testSrc, RouteType.SHORT_DISTANCE))
                 .isInstanceOf(RouteNotFoundException.class);
     }
+
+    // TODO 경로 탐색 알고리즘 테스트
 
 }

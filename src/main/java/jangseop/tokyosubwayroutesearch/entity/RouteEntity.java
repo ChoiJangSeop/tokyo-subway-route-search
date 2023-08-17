@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "ROUTE")
 public class RouteEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROUTE_ID")
     private Long id;
 

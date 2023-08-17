@@ -1,7 +1,9 @@
 package jangseop.tokyosubwayroutesearch.service;
 
 import jangseop.tokyosubwayroutesearch.domain.RouteUnit;
+import jangseop.tokyosubwayroutesearch.entity.RouteEntity;
 import jangseop.tokyosubwayroutesearch.entity.RouteUnitEntity;
+import jangseop.tokyosubwayroutesearch.exception.DataNotFoundException;
 import jangseop.tokyosubwayroutesearch.repository.RouteRepository;
 import jangseop.tokyosubwayroutesearch.repository.RouteUnitRepository;
 import jangseop.tokyosubwayroutesearch.service.dto.RouteUnitCreateDto;
@@ -22,6 +24,11 @@ public class RouteUnitServiceImpl implements RouteUnitService {
     public RouteUnit create(RouteUnitCreateDto dto) {
         RouteUnitEntity routeUnitEntity = RouteUnitEntity.of(dto);
         routeUnitRepository.save(routeUnitEntity);
+
+        RouteEntity routeEntity = routeRepository.findById(dto.routeId())
+                .orElseThrow(() -> new DataNotFoundException(dto.routeId()));
+
+        routeUnitEntity.setRoute(routeEntity);
 
         return RouteUnit.of(routeUnitEntity);
     }

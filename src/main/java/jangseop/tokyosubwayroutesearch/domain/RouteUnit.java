@@ -6,7 +6,7 @@ public record RouteUnit(int order, String src, String dest, String lineNumber, d
 
     public static RouteUnit of(RouteUnitEntity routeUnitEntity) {
         return new RouteUnit(
-                routeUnitEntity.getOrder(),
+                routeUnitEntity.getNumber(),
                 routeUnitEntity.getSrc(), routeUnitEntity.getDest(), routeUnitEntity.getLineNumber(),
                 routeUnitEntity.getDistance(), routeUnitEntity.getDuration());
     }

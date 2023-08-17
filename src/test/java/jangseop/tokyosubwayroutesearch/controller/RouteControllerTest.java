@@ -1,6 +1,7 @@
 package jangseop.tokyosubwayroutesearch.controller;
 
 
+import jangseop.tokyosubwayroutesearch.appservice.RouteAppService;
 import jangseop.tokyosubwayroutesearch.domain.Route;
 import jangseop.tokyosubwayroutesearch.domain.RouteType;
 import jangseop.tokyosubwayroutesearch.domain.RouteUnit;
@@ -28,6 +29,9 @@ public class RouteControllerTest {
     @MockBean
     RouteService routeService;
 
+    @MockBean
+    RouteAppService routeAppService;
+
     @Autowired
     private MockMvc mockMvc;
     
@@ -35,6 +39,7 @@ public class RouteControllerTest {
     @DisplayName("경로를 조회합니다")
     public void getRoute() throws Exception {
         // given
+        Long testRouteId = 1L;
         double testTotalDistance = 4.0;
         int testTotalDuration = 11;
 
@@ -48,17 +53,24 @@ public class RouteControllerTest {
         int testUnitDuration = 11;
         double testUnitDistance = 4.0;
 
-        when(routeService.findRoute(testSrc, testDest, RouteType.SHORT_DISTANCE)).thenReturn(
+
+        RouteUnit testRouteUnit = new RouteUnit(testUnitOrder, testUnitSrc, testUnitDest, testUnitLine, testUnitDistance,
+                testUnitDuration);
+
+        when(routeAppService.searchRoute(testSrc, testDest, RouteType.SHORT_DISTANCE)).thenReturn(
                 new Route(
+                        testRouteId,
                         testSrc, testDest, RouteType.SHORT_DISTANCE,
                         testTotalDistance, testTotalDuration,
-                        List.of(new RouteUnit(testUnitOrder, testUnitSrc, testUnitDest, testUnitLine, testUnitDistance,
-                                testUnitDuration)))
+                        List.of(testRouteUnit))
         );
+
+
 
         
         // when
-        mockMvc.perform(get(String.format("/routes?src=%s&dest=%s&type=%s", testSrc, testDest, RouteType.SHORT_DISTANCE.toString())))
+        mockMvc.perform(get(String.format("/routes?src=%s&dest=%s&type=%s", testSrc, testDest,
+                        RouteType.SHORT_DISTANCE.toString())))
                 .andDo(print())
         // then
                 .andExpect(jsonPath("$.totalDistance").value(is(testTotalDistance)))
