@@ -71,7 +71,9 @@ public class RouteAppServiceImpl implements RouteAppService {
         linkService.findAllByStation(src).forEach(link -> {
 
             String targetStation = "";
+            String targetLineNumber = link.lineNumber();
             Double targetData = link.getData(routeType);
+
             List<Link> targetRoute = new ArrayList<>();
             targetRoute.add(link);
 
@@ -84,7 +86,7 @@ public class RouteAppServiceImpl implements RouteAppService {
 
             dist.put(targetStation, targetData);
             links.put(targetStation, targetRoute);
-            pq.add(new Node(targetStation, targetData));
+            pq.add(new Node(targetStation, targetLineNumber, targetData));
         });
 
         while (!pq.isEmpty()) {
@@ -100,7 +102,10 @@ public class RouteAppServiceImpl implements RouteAppService {
             linkService.findAllByStation(curr.station()).forEach(link -> {
 
                 String targetStation = "";
+                String targetLineNumber = link.lineNumber();
                 Double targetData = link.getData(routeType);
+
+                int transferWeight = (targetLineNumber.equals(curr.lineNumber())) ? 0 : 1;
 
                 if (link.prevStation().equals(curr.station())) {
                     targetStation = link.nextStation();
@@ -110,7 +115,7 @@ public class RouteAppServiceImpl implements RouteAppService {
 
                 if (visited.get(targetStation) == null || !visited.get(targetStation)) {
 
-                    if (dist.get(targetStation) == null || dist.get(targetStation) > curr.data() + targetData) {
+                    if (dist.get(targetStation) == null || dist.get(targetStation) > transferWeight + curr.data() + targetData) {
 
                         dist.put(targetStation, curr.data() + targetData);
 
@@ -119,7 +124,7 @@ public class RouteAppServiceImpl implements RouteAppService {
 
                         links.put(targetStation, targetRoute);
 
-                        pq.add(new Node(targetStation, curr.data() + targetData));
+                        pq.add(new Node(targetStation, targetLineNumber, transferWeight + curr.data() + targetData));
                     }
                 }
             });
@@ -216,7 +221,7 @@ public class RouteAppServiceImpl implements RouteAppService {
         return routeUnits;
     }
 
-    private record Node(String station, double data) {}
+    private record Node(String station, String lineNumber, double data) {}
 
 
 }
